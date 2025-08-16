@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本語を学ぼう - Impara il Giapponese</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .japanese-text {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
+        }
+        
+        .sakura-bg {
+            background: linear-gradient(135deg, #ffb3ba 0%, #ffdfba 50%, #ffffba 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .floating-sakura {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 to-red-50 min-h-screen">
+    <div id="app" class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="gradient-bg text-white rounded-3xl p-8 mb-8 relative overflow-hidden">
+                <div class="absolute top-4 right-4 text-4xl floating-sakura">🌸</div>
+                <div class="absolute bottom-4 left-4 text-3xl floating-sakura" style="animation-delay: -2s;">🌸</div>
+                <h1 class="text-4xl font-bold mb-4 japanese-text">🇯🇵 日本語を学ぼう</h1>
+                <p class="text-xl opacity-90">Impara il Giapponese con Lezioni Interattive</p>
+                <p class="text-sm opacity-75 mt-2 japanese-text">Nihongo wo manabou!</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="flex justify-center mb-8">
+            <div class="bg-white rounded-full p-2 shadow-lg">
+                <button onclick="showSection('home')" class="nav-btn px-6 py-3 rounded-full font-medium transition-all duration-300 bg-red-500 text-white">
+                    🏠 Home
+                </button>
+                <button onclick="showSection('lessons')" class="nav-btn px-6 py-3 rounded-full font-medium transition-all duration-300 text-gray-600 hover:bg-red-100">
+                    📚 Lezioni
+                </button>
+                <button onclick="showSection('exercises')" class="nav-btn px-6 py-3 rounded-full font-medium transition-all duration-300 text-gray-600 hover:bg-red-100">
+                    🎯 Esercizi
+                </button>
+                <button onclick="showSection('progress')" class="nav-btn px-6 py-3 rounded-full font-medium transition-all duration-300 text-gray-600 hover:bg-red-100">
+                    📊 Progressi
+                </button>
+            </div>
+        </nav>
+
+        <!-- Home Section -->
+        <div id="home-section" class="section">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Quick Start Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Inizia Subito</h3>
+                    <p class="text-gray-600 mb-4">Comincia con l'Hiragana</p>
+                    <button onclick="startLesson(1)" class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all">
+                        Inizia Ora
+                    </button>
+                </div>
+
+                <!-- Progress Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">I Tuoi Progressi</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Completato</span>
+                            <span id="progress-percent">30%</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div id="progress-bar" class="bg-gradient-to-r from-red-400 to-pink-500 h-2 rounded-full" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">2 lezioni completate</p>
+                </div>
+
+                <!-- Daily Goal Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Obiettivo Giornaliero</h3>
+                    <p class="text-gray-600 mb-4">20 minuti di studio</p>
+                    <div class="flex items-center">
+                        <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">5</div>
+                        <span class="text-sm text-gray-600">giorni di fila! 🔥</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Lessons -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Lezioni in Evidenza</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border-2 border-red-200 rounded-xl p-6 hover:border-red-400 transition-all cursor-pointer" onclick="startLesson(1)">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-red-100 rounded-full p-3 mr-4">
+                                <span class="text-2xl japanese-text">あ</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Hiragana Base</h3>
+                                <p class="text-gray-600 text-sm">Impara i primi caratteri Hiragana</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Principiante</span>
+                            <span class="text-red-600 font-medium">20 min</span>
+                        </div>
+                    </div>
+
+                    <div class="border-2 border-pink-200 rounded-xl p-6 hover:border-pink-400 transition-all cursor-pointer" onclick="startLesson(2)">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-pink-100 rounded-full p-3 mr-4">
+                                <span class="text-2xl japanese-text">ア</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Katakana Base</h3>
+                                <p class="text-gray-600 text-sm">Scopri l'alfabeto Katakana</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Intermedio</span>
+                            <span class="text-pink-600 font-medium">18 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lessons Section -->
+        <div id="lessons-section" class="section hidden">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">📚 Lezioni di Giapponese</h2>
+                
+                <div class="grid gap-6">
+                    <!-- LEZIONI ESISTENTI - Puoi modificare queste o usarle come template -->
+                    
+                    <!-- Lesson 1 -->
+                    <div class="border-2 border-red-200 rounded-xl p-6 card-hover cursor-pointer" onclick="startLesson(1)">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold mr-4">1</div>
+                                <div>
+                                    <h3 class="text-xl font-bold japanese-text">ひらがな基本 - Hiragana Base</h3>
+                                    <p class="text-gray-600">あ, い, う, え, お, か, き, く, け, こ</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm mb-2">Completata ✓</div>
+                                <span class="text-red-600 font-medium">20 min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 2 -->
+                    <div class="border-2 border-pink-200 rounded-xl p-6 card-hover cursor-pointer" onclick="startLesson(2)">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="bg-pink-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold mr-4">2</div>
+                                <div>
+                                    <h3 class="text-xl font-bold japanese-text">カタカナ基本 - Katakana Base</h3>
+                                    <p class="text-gray-600">ア, イ, ウ, エ, オ, カ, キ, ク, ケ, コ</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mb-2">In Corso</div>
+                                <span class="text-pink-600 font-medium">18 min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 3 -->
+                    <div class="border-2 border-gray-200 rounded-xl p-6 card-hover opacity-75">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="bg-gray-400 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold mr-4">3</div>
+                                <div>
+                                    <h3 class="text-xl font-bold japanese-text">最初の言葉 - Prime Parole</h3>
+                                    <p class="text-gray-600">こんにちは, ありがとう, はい, いいえ</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm mb-2">Bloccata 🔒</div>
+                                <span class="text-gray-500 font-medium">25 min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 
+                    ========================================
+                    🎯 AGGIUNGI NUOVE LEZIONI QUI SOTTO! 
+                    ========================================
+                    
+                    TEMPLATE PER NUOVA LEZIONE:
+                    Copia questo codice e modifica:
+                    - Numero della lezione (4, 5, 6...)
+                    - Colore del bordo (border-blue-200, border-green-200...)
+                    - Colore del cerchio (bg-blue-500, bg-green-500...)
+                    - Titolo in giapponese e italiano
+                    - Descrizione del contenuto
+                    - Stato (Completata, In Corso, Bloccata)
+                    - Durata stimata
+                    
+                    <div class="border-2 border-blue-200 rounded-xl p-6 card-hover cursor-pointer" onclick="startLesson(4)">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold mr-4">4</div>
+                                <div>
+                                    <h3 class="text-xl font-bold japanese-text">濁音 - Suoni Sonori</h3>
+                                    <p class="text-gray-600">が, ぎ, ぐ, げ, ご, ざ, じ, ず, ぜ, ぞ</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm mb-2">Bloccata 🔒</div>
+                                <span class="text-gray-500 font-medium">22 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercises Section -->
+        <div id="exercises-section" class="section hidden">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">🎯 Esercizi Interattivi</h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="sakura-bg rounded-xl p-6 card-hover cursor-pointer" onclick="startExercise('matching')">
+                        <div class="text-4xl mb-4">🔗</div>
+                        <h3 class="text-xl font-bold mb-2">Abbina i Caratteri</h3>
+                        <p class="text-gray-600 mb-4">Collega Hiragana e Katakana con i loro suoni</p>
+                        <div class="flex justify-between items-center">
+                            <span class="bg-red-200 text-red-800 px-3 py-1 rounded-full text-sm">15 domande</span>
+                            <span class="text-red-600 font-medium">8 min</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl p-6 card-hover cursor-pointer" onclick="startExercise('pronunciation')">
+                        <div class="text-4xl mb-4">🎵</div>
+                        <h3 class="text-xl font-bold mb-2">Pronuncia</h3>
+                        <p class="text-gray-600 mb-4">Ascolta e ripeti i suoni giapponesi</p>
+                        <div class="flex justify-between items-center">
+                            <span class="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm">20 suoni</span>
+                            <span class="text-blue-600 font-medium">10 min</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Exercise -->
+                <div id="exercise-area" class="bg-gray-50 rounded-xl p-8">
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">Esercizio: Riconosci il Carattere</h3>
+                        <div class="bg-white rounded-xl p-8 mb-6 shadow-inner">
+                            <div class="text-8xl japanese-text mb-6 pulse-animation text-red-500" id="exercise-character">あ</div>
+                            <p class="text-lg text-gray-600 mb-8">Come si pronuncia questo carattere Hiragana?</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                                <button onclick="checkAnswer('a')" class="exercise-option bg-red-100 hover:bg-red-200 text-red-800 py-4 px-6 rounded-xl font-medium transition-all">
+                                    A
+                                </button>
+                                <button onclick="checkAnswer('i')" class="exercise-option bg-pink-100 hover:bg-pink-200 text-pink-800 py-4 px-6 rounded-xl font-medium transition-all">
+                                    I
+                                </button>
+                                <button onclick="checkAnswer('u')" class="exercise-option bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-xl font-medium transition-all">
+                                    U
+                                </button>
+                                <button onclick="checkAnswer('e')" class="exercise-option bg-green-100 hover:bg-green-200 text-green-800 py-4 px-6 rounded-xl font-medium transition-all">
+                                    E
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="exercise-feedback" class="hidden">
+                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-4">
+                                <strong>Corretto! 🎉</strong> あ si pronuncia "A"
+                            </div>
+                            <button onclick="nextExercise()" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all">
+                                Prossima Domanda →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progress-section" class="section hidden">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">📊 I Tuoi Progressi</h2>
+                
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="text-center">
+                        <div class="bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-2xl p-6">
+                            <div class="text-3xl font-bold">2</div>
+                            <div class="text-sm opacity-90">Lezioni Completate</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl p-6">
+                            <div class="text-3xl font-bold">32</div>
+                            <div class="text-sm opacity-90">Caratteri Appresi</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-gradient-to-br from-green-500 to-teal-500 text-white rounded-2xl p-6">
+                            <div class="text-3xl font-bold">5</div>
+                            <div class="text-sm opacity-90">Giorni di Fila</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Hiragana Progress -->
+                    <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4 text-red-700">Hiragana Appresi</h3>
+                        <div class="grid grid-cols-5 gap-3">
+                            <div class="bg-green-100 border-2 border-green-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">あ</div>
+                                <div class="text-xs text-green-700 mt-1">✓</div>
+                            </div>
+                            <div class="bg-green-100 border-2 border-green-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">い</div>
+                                <div class="text-xs text-green-700 mt-1">✓</div>
+                            </div>
+                            <div class="bg-green-100 border-2 border-green-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">う</div>
+                                <div class="text-xs text-green-700 mt-1">✓</div>
+                            </div>
+                            <div class="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">え</div>
+                                <div class="text-xs text-yellow-700 mt-1">~</div>
+                            </div>
+                            <div class="bg-gray-100 border-2 border-gray-300 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">お</div>
+                                <div class="text-xs text-gray-500 mt-1">○</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Katakana Progress -->
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4 text-blue-700">Katakana Appresi</h3>
+                        <div class="grid grid-cols-5 gap-3">
+                            <div class="bg-green-100 border-2 border-green-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">ア</div>
+                                <div class="text-xs text-green-700 mt-1">✓</div>
+                            </div>
+                            <div class="bg-green-100 border-2 border-green-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">イ</div>
+                                <div class="text-xs text-green-700 mt-1">✓</div>
+                            </div>
+                            <div class="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">ウ</div>
+                                <div class="text-xs text-yellow-700 mt-1">~</div>
+                            </div>
+                            <div class="bg-gray-100 border-2 border-gray-300 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">エ</div>
+                                <div class="text-xs text-gray-500 mt-1">○</div>
+                            </div>
+                            <div class="bg-gray-100 border-2 border-gray-300 rounded-lg p-3 text-center">
+                                <div class="text-2xl japanese-text">オ</div>
+                                <div class="text-xs text-gray-500 mt-1">○</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-sm text-gray-600 text-center">
+                    <span class="inline-block w-3 h-3 bg-green-400 rounded-full mr-2"></span>Appreso
+                    <span class="inline-block w-3 h-3 bg-yellow-400 rounded-full mr-2 ml-4"></span>In Corso
+                    <span class="inline-block w-3 h-3 bg-gray-300 rounded-full mr-2 ml-4"></span>Da Imparare
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-red-500', 'text-white');
+                btn.classList.add('text-gray-600', 'hover:bg-red-100');
+            });
+            
+            // Find and update the clicked button
+            const clickedButton = Array.from(document.querySelectorAll('.nav-btn')).find(btn => 
+                btn.onclick && btn.onclick.toString().includes(sectionName)
+            );
+            
+            if (clickedButton) {
+                clickedButton.classList.add('bg-red-500', 'text-white');
+                clickedButton.classList.remove('text-gray-600', 'hover:bg-red-100');
+            }
+        }
+
+        // Lesson functions
+        function startLesson(lessonNumber) {
+            // Show lesson content based on lesson number
+            
+            /* 
+            ========================================
+            🎯 AGGIUNGI NUOVE LEZIONI QUI SOTTO!
+            ========================================
+            
+            Per aggiungere una nuova lezione:
+            1. Aggiungi un nuovo "else if" con il numero della lezione
+            2. Chiama showLessonContent() con:
+               - Titolo della lezione
+               - Descrizione breve
+               - Array di caratteri con: char, sound, example
+            
+            Esempio per Lezione 4:
+            } else if (lessonNumber === 4) {
+                showLessonContent('Suoni Sonori (Dakuten)', 'が, ぎ, ぐ, げ, ご, ざ, じ, ず, ぜ, ぞ', [
+                    {char: 'が', sound: 'GA', example: 'がっこう (gakkou - scuola)'},
+                    {char: 'ぎ', sound: 'GI', example: 'ぎんこう (ginkou - banca)'},
+                    {char: 'ぐ', sound: 'GU', example: 'ぐあい (guai - condizione)'},
+                    {char: 'げ', sound: 'GE', example: 'げつようび (getsuyoubi - lunedì)'},
+                    {char: 'ご', sound: 'GO', example: 'ごはん (gohan - riso/pasto)'}
+                ]);
+            */
+            
+            if (lessonNumber === 1) {
+                showLessonContent('Hiragana Base', 'あ, い, う, え, お, か, き, く, け, こ', [
+                    {char: 'あ', sound: 'A', example: 'あさ (asa - mattina)'},
+                    {char: 'い', sound: 'I', example: 'いえ (ie - casa)'},
+                    {char: 'う', sound: 'U', example: 'うみ (umi - mare)'},
+                    {char: 'え', sound: 'E', example: 'えき (eki - stazione)'},
+                    {char: 'お', sound: 'O', example: 'おちゃ (ocha - tè)'},
+                    {char: 'か', sound: 'KA', example: 'かぞく (kazoku - famiglia)'}
+                ]);
+            } else if (lessonNumber === 2) {
+                showLessonContent('Katakana Base', 'ア, イ, ウ, エ, オ, カ, キ, ク, ケ, コ', [
+                    {char: 'ア', sound: 'A', example: 'アメリカ (Amerika - America)'},
+                    {char: 'イ', sound: 'I', example: 'イタリア (Itaria - Italia)'},
+                    {char: 'ウ', sound: 'U', example: 'ウイルス (uirusu - virus)'},
+                    {char: 'エ', sound: 'E', example: 'エレベーター (erebeetaa - ascensore)'},
+                    {char: 'オ', sound: 'O', example: 'オレンジ (orenji - arancia)'},
+                    {char: 'カ', sound: 'KA', example: 'カメラ (kamera - macchina fotografica)'}
+                ]);
+            } else {
+                alert(`🔒 La Lezione ${lessonNumber} sarà disponibile presto! Completa prima le lezioni precedenti.`);
+            }
+        }
+
+        function showLessonContent(title, description, characters) {
+            // Create lesson modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">${title}</h2>
+                        <button onclick="closeLessonModal()" class="text-gray-500 hover:text-gray-700 text-2xl">✕</button>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-8 japanese-text">${description}</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                        ${characters.map(char => `
+                            <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-6 text-center card-hover">
+                                <div class="text-6xl japanese-text mb-4 text-red-600">${char.char}</div>
+                                <div class="text-xl font-bold mb-2">${char.sound}</div>
+                                <div class="text-gray-600 japanese-text text-sm">${char.example}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="startLessonQuiz('${title}')" class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all">
+                            🎯 Fai il Quiz
+                        </button>
+                        <button onclick="closeLessonModal()" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-300 transition-all">
+                            ✓ Completato
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeLessonModal() {
+            const modal = document.querySelector('.fixed.inset-0');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function startLessonQuiz(lessonTitle) {
+            closeLessonModal();
+            showSection('exercises');
+            alert(`🎯 Ottimo! Ora prova il quiz per ${lessonTitle}. Vai alla sezione Esercizi per testare quello che hai imparato!`);
+        }
+
+        // Exercise functions
+        let currentExercise = {
+            character: 'あ',
+            correctAnswer: 'a',
+            characters: [
+                {char: 'あ', answer: 'a', sound: 'A'},
+                {char: 'い', answer: 'i', sound: 'I'},
+                {char: 'う', answer: 'u', sound: 'U'},
+                {char: 'え', answer: 'e', sound: 'E'},
+                {char: 'お', answer: 'o', sound: 'O'},
+                {char: 'か', answer: 'ka', sound: 'KA'}
+            ],
+            currentIndex: 0
+        };
+
+        function startExercise(type) {
+            if (type === 'matching') {
+                document.getElementById('exercises-section').scrollIntoView({behavior: 'smooth'});
+                document.getElementById('exercise-area').scrollIntoView({behavior: 'smooth'});
+            } else {
+                alert(`🎵 Esercizio di pronuncia! In una vera app, qui useresti il microfono per praticare la pronuncia dei caratteri giapponesi.`);
+            }
+        }
+
+        function checkAnswer(answer) {
+            const feedback = document.getElementById('exercise-feedback');
+            const character = currentExercise.characters[currentExercise.currentIndex];
+            
+            if (answer === character.answer) {
+                feedback.innerHTML = `
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-4 bounce-in">
+                        <strong>Corretto! 🎉</strong> ${character.char} si pronuncia "${character.sound}"
+                    </div>
+                    <button onclick="nextExercise()" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all">
+                        Prossima Domanda →
+                    </button>
+                `;
+            } else {
+                feedback.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4 bounce-in">
+                        <strong>Riprova! 🤔</strong> ${character.char} non si pronuncia così...
+                    </div>
+                    <button onclick="nextExercise()" class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all">
+                        Mostra Risposta
+                    </button>
+                `;
+            }
+            
+            feedback.classList.remove('hidden');
+            
+            // Disable option buttons
+            document.querySelectorAll('.exercise-option').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+            });
+        }
+
+        function nextExercise() {
+            currentExercise.currentIndex = (currentExercise.currentIndex + 1) % currentExercise.characters.length;
+            const character = currentExercise.characters[currentExercise.currentIndex];
+            
+            document.getElementById('exercise-character').textContent = character.char;
+            document.getElementById('exercise-feedback').classList.add('hidden');
+            
+            // Re-enable option buttons
+            document.querySelectorAll('.exercise-option').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            });
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some interactive animations
+            setInterval(() => {
+                const progressBar = document.getElementById('progress-bar');
+                const currentWidth = parseInt(progressBar.style.width);
+                if (currentWidth < 100) {
+                    const newWidth = Math.min(currentWidth + Math.random() * 2, 100);
+                    progressBar.style.width = newWidth + '%';
+                    document.getElementById('progress-percent').textContent = Math.round(newWidth) + '%';
+                }
+            }, 5000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97016147811aedb3',t:'MTc1NTM1MjAwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
